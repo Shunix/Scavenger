@@ -2,6 +2,8 @@ package com.shunix.scavenger.app;
 
 import android.util.Log;
 
+import com.shunix.scavenger.log.Crash;
+
 /**
  * Replacement for the default uncaught exception handler
  * Created by shunix on 15-1-31.
@@ -19,11 +21,12 @@ public class ScavengerExceptionHandler implements Thread.UncaughtExceptionHandle
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+        final Crash crash = new Crash(ex, mApp);
         mApp.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    mApp.getLogger().log();
+                    mApp.getLogger().log(crash);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }

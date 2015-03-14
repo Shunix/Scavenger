@@ -5,5 +5,5 @@ package com.shunix.scavenger.log;
  * Created by shunix on 15-2-1.
  */
 public interface Logger {
-    public void log();
+    public void log(Crash crash);
 }

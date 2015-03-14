@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.io.PrintStream;
  * Created by shunix on 15-2-2.
  */
 public class Crash {
+    private static final String TAG = Crash.class.getName();
     protected Throwable mException;
     protected Context mContext;
     private StringBuilder mBuilder;
@@ -37,13 +39,13 @@ public class Crash {
                 mException.printStackTrace(new PrintStream(baos));
                 mBuilder.append(new String(baos.toByteArray()));
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             } finally {
                 if (baos != null) {
                     try {
                         baos.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, e.getMessage());
                     }
                 }
             }
@@ -70,7 +72,7 @@ public class Crash {
                     .append("\n");
             packageInfoString = stringBuilder.toString();
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return packageInfoString;
     }
