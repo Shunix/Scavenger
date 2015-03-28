@@ -21,13 +21,17 @@ public class ScavengerApplication extends Application {
     private static final String TAG = ScavengerApplication.class.getName();
     private LogConfig mLogConfig = null;
     private ExecutorService mExecutor = null;
-
+    private native void saveApplicationNative();
+    static {
+        System.loadLibrary("scavenger");
+    }
     @Override
     public void onCreate() {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new ScavengerExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(), this));
         mLogConfig = new LogConfig(getLoggerName());
         mExecutor = Executors.newCachedThreadPool();
+        saveApplicationNative();
     }
 
     /**
@@ -55,5 +59,9 @@ public class ScavengerApplication extends Application {
         if (mExecutor != null) {
             mExecutor.execute(task);
         }
+    }
+
+    public void handleNativeCrash() {
+        // TODO handle native crash
     }
 }
