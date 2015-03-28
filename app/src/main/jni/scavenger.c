@@ -5,6 +5,7 @@
 #define CATCHSIG(X) sigaction(X, &handler, &old_sa[X])
 
 static struct sigaction old_sa[NSIG];
+static JNIEnv *env;
 
 void android_sigaction(int signal, siginfo_t *info, void *reserved) {
     // TODO invoke java method
@@ -13,6 +14,10 @@ void android_sigaction(int signal, siginfo_t *info, void *reserved) {
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
     __android_log_print(ANDROID_LOG_VERBOSE, "Scavenger Jni", "JNI_OnLoad is called");
+    if ((*vm)->GetEnv(vm, (void **)&env, JNI_VERSION_1_4))
+    {
+       return JNI_ERR;
+    }
     struct sigaction handler;
     memset(&handler, 0, sizeof(sigaction));
     handler.sa_sigaction = android_sigaction;

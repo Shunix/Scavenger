@@ -2,6 +2,8 @@ package com.shunix.scavenger.app;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.shunix.scavenger.log.LogConfig;
 import com.shunix.scavenger.log.Logger;
@@ -16,6 +18,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("unused")
 public class ScavengerApplication extends Application {
 
+    private static final String TAG = ScavengerApplication.class.getName();
     private LogConfig mLogConfig = null;
     private ExecutorService mExecutor = null;
 
@@ -34,8 +37,14 @@ public class ScavengerApplication extends Application {
      * @return name of custom logger
      */
     private String getLoggerName() {
-        ApplicationInfo ai = getApplicationInfo();
-        return ai.metaData.getString(LogConfig.META_LOGGER_NAME);
+        String name = null;
+        try {
+            ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            name = ai.metaData.getString(LogConfig.META_LOGGER_NAME);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Cannot get meta data");
+        }
+        return name;
     }
 
     public Logger getLogger() {
