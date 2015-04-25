@@ -20,10 +20,11 @@ static JNINativeMethod methods[] = {
 };
 
 void android_sigaction(int signal, siginfo_t *info, void *reserved) {
+    __android_log_print(ANDROID_LOG_VERBOSE, "Scavenger Jni", "Native crashed");
     JNIEnv* env;
     (*jvm)->AttachCurrentThread(jvm, &env, NULL);
     (*env)->CallVoidMethod(env, obj, callback);
-    (*jvm)->DetachCurrentThread(jvm) ;
+    (*jvm)->DetachCurrentThread(jvm);
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
@@ -37,8 +38,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
     jvm = vm;
     jclass clazz = (*env)->FindClass(env, classPathName);
     (*env)->RegisterNatives(env, clazz, methods, sizeof(methods)/sizeof(methods[0]));
-    jmethodID _callback = (*env)->GetMethodID(env, clazz, "handleNativeCrash", "()V");
-    callback = (*env)->NewGlobalRef(env, _callback);
+    callback = (*env)->GetMethodID(env, clazz, "handleNativeCrash", "()V");
     struct sigaction handler;
     memset(&handler, 0, sizeof(sigaction));
     handler.sa_sigaction = android_sigaction;

@@ -31,7 +31,7 @@ public class ScavengerApplication extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new ScavengerExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(), this));
         mLogConfig = new LogConfig(getLoggerName());
         mExecutor = Executors.newCachedThreadPool();
-//        saveApplicationNative();
+        saveApplicationNative();
     }
 
     /**
@@ -62,6 +62,6 @@ public class ScavengerApplication extends Application {
     }
 
     public void handleNativeCrash() {
-        // TODO handle native crash
+        Log.e(TAG, "Native crash");
     }
 }
