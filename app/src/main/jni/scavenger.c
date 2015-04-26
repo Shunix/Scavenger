@@ -24,7 +24,8 @@ void android_sigaction(int signal, siginfo_t *info, void *reserved) {
     JNIEnv* env;
     (*jvm)->AttachCurrentThread(jvm, &env, NULL);
     (*env)->CallVoidMethod(env, obj, callback);
-    (*jvm)->DetachCurrentThread(jvm);
+    old_sa[signal].sa_handler(signal);
+//    (*jvm)->DetachCurrentThread(jvm);
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)

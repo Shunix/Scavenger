@@ -1,6 +1,7 @@
 package com.shunix.scavenger.app;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -62,6 +63,9 @@ public class ScavengerApplication extends Application {
     }
 
     public void handleNativeCrash() {
-        Log.e(TAG, "Native crash");
+        Log.w(TAG, "Native crash");
+        Intent intent = new Intent(this, NativeCrashedActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
